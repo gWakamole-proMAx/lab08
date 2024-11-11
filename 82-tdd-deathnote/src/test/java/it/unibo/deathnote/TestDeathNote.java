@@ -3,22 +3,23 @@ package it.unibo.deathnote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import it.unibo.deathnote.api.DeathNote;
 import it.unibo.deathnote.impl.*;
 
 class TestDeathNote {
-    private DeathNote TestDeathNote;
+    private DeathNote testDeathNote;
 
     void setUp () {
-        TestDeathNote = new DeathNoteImpl();
-        assertNotNull(TestDeathNote);
+        testDeathNote = new DeathNoteImpl();
+        assertNotNull(testDeathNote);
     }
 
     void testGetRule () {
         try {
-            TestDeathNote.getRule(0);
+            testDeathNote.getRule(0);
             fail("getting the rule 0 was possible, should have thrown an exception");
         } catch (IllegalArgumentException e) {
             assertNotNull(e.getMessage());
@@ -28,7 +29,7 @@ class TestDeathNote {
         }
 
         try {
-            TestDeathNote.getRule(-1);
+            testDeathNote.getRule(-1);
             fail("getting the rule -1 was possible, should have thrown an exception");
         } catch (IllegalArgumentException e) {
             assertNotNull(e.getMessage());
@@ -43,5 +44,14 @@ class TestDeathNote {
             assertNotNull(rule);
             assertFalse(rule.isBlank());
         }
+    }
+
+    void testWrite () {
+        String humanName = "name";
+        assertFalse(testDeathNote.isNameWritten(humanName));
+        testDeathNote.writeName(humanName);
+        assertTrue(testDeathNote.isNameWritten(humanName));
+        assertFalse(testDeathNote.isNameWritten(humanName + "s"));
+        assertFalse(testDeathNote.isNameWritten(""));
     }
 }
