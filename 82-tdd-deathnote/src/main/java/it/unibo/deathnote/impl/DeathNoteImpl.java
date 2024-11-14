@@ -1,21 +1,28 @@
 package it.unibo.deathnote.impl;
 
+import java.util.HashMap;
+
 import it.unibo.deathnote.api.*;
 
 public class DeathNoteImpl implements DeathNote {
 
     static int NUMBER_OF_RULES = 13;
+    HashMap<String, Death> kills;
+    String lastName;
 
-    @Override
-    public String getDeathCause(String name) {
-        // TODO Auto-generated method stub
-        return null;
+    public DeathNoteImpl () {
+        this.kills = new HashMap<>();
+        lastName = null;
     }
 
     @Override
-    public String getDeathDetails(String name) {
-        // TODO Auto-generated method stub
-        return null;
+    public String getDeathCause(final String name) {
+        return kills.get(name).cause;
+    }
+
+    @Override
+    public String getDeathDetails(final String name) {
+        return kills.get(name).details;
     }
 
     @Override
@@ -29,27 +36,47 @@ public class DeathNoteImpl implements DeathNote {
     }
 
     @Override
-    public boolean isNameWritten(String name) {
+    public boolean isNameWritten(final String name) {
+        return kills.containsKey(name);
+    }
+
+    @Override
+    public boolean writeDeathCause(final String cause) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean writeDeathCause(String cause) {
+    public boolean writeDetails(final String details) {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean writeDetails(String details) {
-        // TODO Auto-generated method stub
-        return false;
+    public void writeName(final String name) {
+        if(name == null) {
+            throw new NullPointerException("the name written cannot be null");
+        }
+        this.kills.put(name, new Death());
+        this.lastName = name;
     }
 
-    @Override
-    public void writeName(String name) {
-        // TODO Auto-generated method stub
-        
+    private static final class Death {
+        final static String DEFAULT_CAUSE_OF_DEATH = "heart attack";
+        final static String DEFAULT_DETAIL_OF_DEATH = "";
+        private String cause;
+        private String details;
+        private double time;
+
+        public Death () {
+            this.cause = DEFAULT_CAUSE_OF_DEATH;
+            this.details = DEFAULT_DETAIL_OF_DEATH;
+            this.time = System.currentTimeMillis();
+        }
+
+        public double getTime() {
+            return this.time;
+        }
     }
     
 }
