@@ -6,17 +6,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.*;
+
 import it.unibo.deathnote.api.DeathNote;
 import it.unibo.deathnote.impl.*;
 
 class TestDeathNote {
     private DeathNote testDeathNote;
-
+    
+    @BeforeEach
     void setUp () {
         testDeathNote = new DeathNoteImpl();
         assertNotNull(testDeathNote);
     }
 
+    @Test
     void testGetRule () {
         try {
             testDeathNote.getRule(0);
@@ -39,6 +43,7 @@ class TestDeathNote {
         }
     }
 
+    @Test
     void testRules () {
         for (var rule : DeathNote.RULES) {
             assertNotNull(rule);
@@ -46,6 +51,7 @@ class TestDeathNote {
         }
     }
 
+    @Test
     void testWrite () {
         String humanName = "name";
         assertFalse(testDeathNote.isNameWritten(humanName));
@@ -54,4 +60,39 @@ class TestDeathNote {
         assertFalse(testDeathNote.isNameWritten(humanName + "s"));
         assertFalse(testDeathNote.isNameWritten(""));
     }
+
+    @Test
+    void testDeathCause () {
+        String humanName1 = "name1";
+        String humanName2 = "name2";
+        String causeOfDeath2 = "karting accident";
+
+        try {
+            testDeathNote.writeDeathCause(causeOfDeath2);
+        } catch (IllegalStateException e) {
+            assertNotNull(e.getMessage());
+            assertFalse(e.getMessage().isBlank());
+        } catch (Exception e) {
+            fail("the exception thrown wasn't correct");
+        }
+
+        testDeathNote.writeName(humanName1);
+        assertEquals(testDeathNote.getDeathCause(humanName1), "heart attack");
+
+        testDeathNote.writeName(humanName2);
+        assertTrue(testDeathNote.writeDeathCause(causeOfDeath2));
+        assertEquals(testDeathNote.getDeathCause(humanName2), causeOfDeath2);
+
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            System.exit(0);
+        }
+
+        assertFalse(true);
+        assertFalse(testDeathNote.writeDeathCause(causeOfDeath2));
+        assertEquals(testDeathNote.getDeathCause(humanName2), causeOfDeath2);
+    }
+
+
 }
