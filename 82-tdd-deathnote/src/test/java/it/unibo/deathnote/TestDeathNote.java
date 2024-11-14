@@ -3,6 +3,7 @@ package it.unibo.deathnote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -89,9 +90,37 @@ class TestDeathNote {
             System.exit(0);
         }
 
-        assertFalse(true);
         assertFalse(testDeathNote.writeDeathCause(causeOfDeath2));
         assertEquals(testDeathNote.getDeathCause(humanName2), causeOfDeath2);
+    }
+
+    @Test
+    void testDeathDetails () {
+        String deathDetails = "ran for too long";
+        String humanName = "name";
+
+        try {
+            testDeathNote.writeDetails(deathDetails);
+        } catch (IllegalStateException e) {
+            assertNotNull(e.getMessage());
+            assertFalse(e.getMessage().isBlank());
+        } catch (Exception e) {
+            fail("the exception thrown wasn't correct");
+        }
+
+        testDeathNote.writeName(humanName);
+        assertTrue(testDeathNote.getDeathDetails(humanName).isBlank());
+        assertTrue(testDeathNote.writeDetails(deathDetails));
+        assertEquals(testDeathNote.getDeathDetails(humanName), deathDetails);
+
+        try {
+            Thread.sleep(6100);
+        } catch (Exception e) {
+            System.exit(0);
+        }
+
+        assertFalse(testDeathNote.writeDetails(deathDetails));
+        assertEquals(testDeathNote.getDeathDetails(humanName), deathDetails);
     }
 
 
